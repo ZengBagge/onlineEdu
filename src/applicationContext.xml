@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        ">
+  <!-- 加载资源文件  其中包含变量信息，必须在Spring配置文件的最前面加载，即第一个加载-->
+    <context:property-placeholder location="classpath:alibaba-mysql.properties" />      
+ <!-- 扫描注解Bean -->
+  <context:component-scan base-package="com.ws" />
+  <!-- 支持AOP注解-->
+ <aop:aspectj-autoproxy />
+
+    <!-- 数据库映射 -->
+    <!--  class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" -->
+    <!--  class="org.springframework.jdbc.datasource.DriverManagerDataSource" -->
+<!--   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="${jdbc.driverClassName}" />
+      <property name="url" value="${jdbc.url}" />
+      <property name="username" value="${jdbc.user}" />
+      <property name="password" value="${jdbc.pass}" />
+      
+   </bean>  -->
+    <!-- 配置数据库连接池（c3p0） -->  
+<!--     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">  
+        基本信息  
+        <property name="jdbcUrl" value="${jdbc.url}"></property>  
+        <property name="driverClass" value="${jdbc.driverClassName}"></property>  
+        <property name="user" value="${jdbc.user}"></property>  
+        <property name="password" value="${jdbc.pass}"></property>  
+        其他配置  
+        初始化时获取三个连接，取值应在minPoolSize与maxPoolSize之间。Default: 3  
+        <property name="initialPoolSize" value="3"></property>  
+        连接池中保留的最小连接数。Default: 3  
+        <property name="minPoolSize" value="3"></property>  
+        连接池中保留的最大连接数。Default: 15  
+        <property name="maxPoolSize" value="5"></property>  
+        当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3  
+        <property name="acquireIncrement" value="3"></property>  
+        控制数据源内加载的PreparedStatements数量。如果maxStatements与maxStatementsPerConnection均为0，则缓存被关闭。Default:   
+            0  
+        <property name="maxStatements" value="8"></property>  
+        maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。Default: 0  
+        <property name="maxStatementsPerConnection" value="5"></property>  
+        最大空闲时间,1800秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0  
+        <property name="maxIdleTime" value="1800"></property>  
+    </bean>   -->
+     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"  
+        destroy-method="close">  
+        <property name="url" value="${url}" />  
+        <property name="username" value="${username}" />  
+        <property name="password" value="${password}" />  
+        <property name="driverClassName" value="${driverClassName}" />  
+        <property name="filters" value="${filters}" />  
+  
+        <property name="maxActive" value="${maxActive}" />  
+        <property name="initialSize" value="${initialSize}" />  
+        <property name="maxWait" value="${maxWait}" />  
+        <property name="minIdle" value="${minIdle}" />  
+  
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />  
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />  
+  
+        <property name="validationQuery" value="${validationQuery}" />  
+        <property name="testWhileIdle" value="${testWhileIdle}" />  
+        <property name="testOnBorrow" value="${testOnBorrow}" />  
+        <property name="testOnReturn" value="${testOnReturn}" />  
+        <property name="maxOpenPreparedStatements"  
+            value="${maxOpenPreparedStatements}" />  
+        <property name="removeAbandoned" value="${removeAbandoned}" /> <!-- 打开removeAbandoned功能 -->  
+        <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" /> <!-- 1800秒，也就是30分钟 -->  
+        <property name="logAbandoned" value="${logAbandoned}" /> <!-- 关闭abanded连接时输出错误日志 -->  
+    </bean>  
+  
+<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"  >
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:hibernate.cfg.xml" />
+       <property name="packagesToScan">
+        <value>com.ws.po</value>
+      </property>
+
+</bean>
+
+
+<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
+  <property name="sessionFactory" ref="sessionFactory" />
+</bean>  
+<!-- 声明使用注解式事务 -->  
+ <tx:annotation-driven transaction-manager="transactionManager"/> 
+
+<!-- 定义事务通知 -->  
+<tx:advice id="txAdvice" transaction-manager="transactionManager">  
+    <!-- 定义方法的过滤规则 -->  
+    <tx:attributes>  
+        <!-- 定义事务传播属性 -->  
+            <tx:method name="insert*" propagation="REQUIRED" />  
+            <tx:method name="update*" propagation="REQUIRED" />  
+            <tx:method name="edit*" propagation="REQUIRED" />  
+            <tx:method name="save*" propagation="REQUIRED" />  
+            <tx:method name="add*" propagation="REQUIRED" />  
+            <tx:method name="new*" propagation="REQUIRED" />  
+            <tx:method name="set*" propagation="REQUIRED" />  
+            <tx:method name="remove*" propagation="REQUIRED" />  
+            <tx:method name="delete*" propagation="REQUIRED" />  
+            <tx:method name="publish*" propagation="REQUIRED" />  
+            <tx:method name="change*" propagation="REQUIRED" />  
+            <tx:method name="login*" propagation="REQUIRED" />  
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="load*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="*"  read-only="true"  propagation="REQUIRED"/>  
+    </tx:attributes>  
+</tx:advice>  
+  
+<!-- 定义AOP配置 -->  
+<aop:config>  
+    <!-- 定义一个切入点 -->  
+    <aop:pointcut expression="execution (* com.ws.service..*.*(..))" id="service"/>  
+    <!-- 对切入点和事务的通知，进行适配 -->  
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="service"/>  
+</aop:config>    
+
+	</beans>

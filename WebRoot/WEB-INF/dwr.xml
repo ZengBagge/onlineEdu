@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN" "http://getahead.org/dwr/dwr30.dtd">
+
+<dwr>
+
+  <allow>
+
+
+    <!-- intro - for the test on index.html -->
+  <create creator="spring"  javascript="userPass">
+      <param name="beanName" value="userAction"/>
+    </create>
+     <create creator="spring"  javascript="addCourse">
+      <param name="beanName" value="courseAction"/>
+    </create>
+      <create creator="spring"  javascript="addQuestionType">
+      <param name="beanName" value="questionTypeAction"/>
+    </create>
+    <create creator="spring"  javascript="addTopicRedio">
+      <param name="beanName" value="topicRedioAction"/>
+    </create>
+    <create creator="spring"  javascript="addTopicFill">
+      <param name="beanName" value="topicFillAction"/>
+    </create>
+    <create creator="spring"  javascript="addTopicJudge">
+      <param name="beanName" value="topicJudgeAction"/>
+    </create>
+      <create creator="spring"  javascript="addTopicCheckBox">
+      <param name="beanName" value="topicCheckBoxAction"/>
+    </create>
+    <create creator="spring"  javascript="topicAction">
+      <param name="beanName" value="topicAction"/>
+    </create>
+       <create creator="spring"  javascript="addWorkTopic">
+      <param name="beanName" value="workTopicAction"/>
+    </create>
+      <create creator="spring"  javascript="addWork">
+      <param name="beanName" value="workManageAction"/>
+    </create>
+         <create creator="spring"  javascript="addExamTopic">
+      <param name="beanName" value="examTopicAction"/>
+    </create>
+       <create creator="spring"  javascript="addExam">
+      <param name="beanName" value="examManageAction"/>
+    </create>
+      <create creator="spring"  javascript="work">
+      <param name="beanName" value="workAction"/>
+    </create>
+      <create creator="spring"  javascript="collect">
+      <param name="beanName" value="collectTopicAction"/>
+    </create>
+    <create creator="spring"  javascript="discuz">
+      <param name="beanName" value="discuzAction"/>
+    </create>
+    <create creator="spring"  javascript="exam">
+      <param name="beanName" value="examAction"/>
+    </create>
+        <create creator="spring"  javascript="message">
+      <param name="beanName" value="messageAction"/>
+    </create>
+        <create creator="spring"  javascript="courseChapter">
+      <param name="beanName" value="courseChapterAction"/>
+    </create>
+      <create creator="spring"  javascript="classes">
+      <param name="beanName" value="classesAction"/>
+    </create>
+    <!-- this is a bad idea for live, but can be useful in testing -->
+<!--     <convert converter="exception" match="java.lang.Exception"/>
+    <convert converter="bean" match="java.lang.StackTraceElement"/> -->
+
+  </allow>
+
+</dwr>
+    

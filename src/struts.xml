@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+<constant name="struts.enable.DynamicMethodInvocation" value="true"></constant> <!-- 打开！动态action -->
+<constant name="struts.devMode" value="false"></constant>
+<constant name="struts.objectFactory" value="spring"></constant>
+
+<package name="main"   extends="json-default" ><!-- //必须继承json-default、json-default继承自struts-default -->
+ <interceptors>  
+      <interceptor name="Interceptor" class="sessionInterceptor"></interceptor>    
+      <interceptor-stack name="myStack">       
+       <interceptor-ref name="Interceptor"/>
+        <interceptor-ref name="defaultStack"/>    <!-- 必需引用这个，否则点下一个子ACTION会报错 -->
+      </interceptor-stack>     
+    </interceptors>  
+
+        <global-results>  
+            <!-- 当返回login视图名时，转入/login.jsp页面 -->  
+           <!--   <result type="redirectAction" name="login">user!login</result> -->
+           <result name="login">/WEB-INF/user/login.jsp</result>
+             <result name="error">/error.jsp</result>
+        </global-results> 
+     <action name="index" class="indexAction">
+       <result name="success" >/main.jsp</result>
+       <result name="show" >/show.jsp</result>
+       <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+     </action>
+      <action name="user" class="userAction">
+         <result name="form">WEB-INF/user/regist.jsp</result>
+       <result name="success"  type="redirect">/index</result> 
+         <result name="info">WEB-INF/user/info.jsp</result>
+         <result name="loginform">WEB-INF/user/login.jsp</result>
+      </action>
+        <action name="class" class="classesAction">
+         <result name="info">WEB-INF/user/class/info.jsp</result>
+         <result name="myclasses">WEB-INF/user/class/myclasses.jsp</result>
+      </action>
+      <action name="menuTree" class="menuTreeAction">
+      </action>
+      <action name="course" class="courseAction">
+      <result name="index">WEB-INF/teacher/course/index.jsp</result>
+      <result name="set">WEB-INF/teacher/course/setInfo.jsp</result>
+      <result name="add">WEB-INF/teacher/course/addCourse.jsp</result>
+      <result name="courseIndex">WEB-INF/student/course/courseInfo.jsp</result>
+       <result name="courseInfo">WEB-INF/teacher/course/courseInfo.jsp</result>
+      <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="major" class="majorAction">
+      </action>
+       <action name="questionType" class="questionTypeAction">
+       <result name="index">WEB-INF/teacher/question/type/index.jsp</result>
+       <result name="add">WEB-INF/teacher/question/type/addType.jsp</result>
+       <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+       <action name="topic" class="topicAction">
+         <result name="index">WEB-INF/teacher/question/topic/index.jsp</result>
+        <result name="redio"  type="redirect" >/topicRedio!getRedioList?courseId=${addCourse}</result> 
+          <result name="checkBox" type="redirect">/topicCheckBox!getCheckList?courseId=${addCourse}</result>
+           <result name="fill" type="redirect">/topicFill!getFillList?courseId=${addCourse}</result>
+            <result name="judge" type="redirect">/topicJudge!getJudgeList?courseId=${addCourse}</result>
+           <result name="redioAdd">WEB-INF/teacher/question/topic/redioAdd.jsp</result>
+            <result name="checkBoxAdd">WEB-INF/teacher/question/topic/checkBoxAdd.jsp</result>
+             <result name="fillAdd">WEB-INF/teacher/question/topic/fillAdd.jsp</result>
+              <result name="judgeAdd">WEB-INF/teacher/question/topic/judgeAdd.jsp</result>
+              <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="topicRedio" class="topicRedioAction">
+       <result name="index">WEB-INF/teacher/question/topic/redio.jsp</result>
+       <result name="updateRedio">WEB-INF/teacher/question/topic/redioAdd.jsp</result>
+      </action>
+      <action name="topicCheckBox" class="topicCheckBoxAction">
+       <result name="index">WEB-INF/teacher/question/topic/checkBox.jsp</result>
+         <result name="updateCheckBox">WEB-INF/teacher/question/topic/checkBoxAdd.jsp</result>
+      </action>
+         <action name="topicFill" class="topicFillAction">
+          <result name="index">WEB-INF/teacher/question/topic/fill.jsp</result>
+            <result name="updateFill">WEB-INF/teacher/question/topic/fillAdd.jsp</result>
+      </action>
+          <action name="topicJudge" class="topicJudgeAction">
+           <result name="index">WEB-INF/teacher/question/topic/judge.jsp</result>
+             <result name="updateJudge">WEB-INF/teacher/question/topic/judgeAdd.jsp</result>
+      </action>
+          <action name="fileUpload" class="fileUploadAction">
+            <result type="json" name="success">
+               <param name="contentType">
+                    text/html
+                </param>
+                <param name="includeProperties">fileFileName,msg</param>
+            </result>
+            <result type="json" name="error">
+                <param name="contentType">
+                    text/html
+                </param>
+                <param name="includeProperties">msg</param>
+             </result>
+      </action>
+      <action name="workTopic" class="workTopicAction">
+        <result name="index">WEB-INF/teacher/workManage/workTopic/index.jsp</result>
+        <result name="add">WEB-INF/teacher/workManage/workTopic/add.jsp</result>
+         <result name="addInfo">WEB-INF/teacher/workManage/workTopic/addInfo.jsp</result>
+           <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="workManage" class="workManageAction">
+        <result name="index">WEB-INF/teacher/workManage/index.jsp</result>
+        <result name="add">WEB-INF/teacher/workManage/add.jsp</result>
+        <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="examManage" class="examManageAction">
+        <result name="index">WEB-INF/teacher/examManage/index.jsp</result>
+        <result name="add">WEB-INF/teacher/examManage/add.jsp</result>
+        <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="examTopic" class="examTopicAction">
+        <result name="index">WEB-INF/teacher/examManage/examTopic/index.jsp</result>
+        <result name="add">WEB-INF/teacher/examManage/examTopic/add.jsp</result>
+         <result name="addInfo">WEB-INF/teacher/examManage/examTopic/addInfo.jsp</result>
+           <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+        <action name="work" class="workAction">
+        <result name="classIndex">WEB-INF/student/work/classIndex.jsp</result>
+        <result name="selfIndex">WEB-INF/student/work/selfIndex.jsp</result>
+        <result name="workInfo">WEB-INF/student/work/workInfo.jsp</result>
+        <result name="conduct">WEB-INF/student/work/conduct.jsp</result>
+          <result name="collectTopic">WEB-INF/student/work/collectTopic.jsp</result>
+    
+        <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="discuz" class="discuzAction">
+       <result name="topic">WEB-INF/user/discuz/topic/list.jsp</result>
+        <result name="course">WEB-INF/user/discuz/course/list.jsp</result>
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+        <action name="collect" class="collectTopicAction">
+           <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+        <action name="exam" class="examAction">
+          <result name="index">WEB-INF/student/exam/index.jsp</result>
+           <result name="examInfo">WEB-INF/student/exam/examInfo.jsp</result>
+              <result name="conduct">WEB-INF/student/exam/conduct.jsp</result>
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="loginClient" class="heerSSOLoginAction"></action>
+      
+        <action name="message" class="messageAction">
+       <result name="index">WEB-INF/user/message/index.jsp</result>
+       <result name="indexTeacher">WEB-INF/user/message/indexTeacher.jsp</result>
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+       <action name="performance" class="performanceAction">
+       <result name="index">WEB-INF/teacher/performance/index.jsp</result>
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+         <action name="topicType" class="topicTypeAction">
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+       <action name="courseChapter" class="courseChapterAction">
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+      <action name="blog" class="blogAction">
+          <result name="index">WEB-INF/user/blog/index.jsp</result>
+          <result name="add">WEB-INF/user/blog/add.jsp</result>
+          <result name="ok">WEB-INF/user/blog/index.jsp</result>
+          <result name="no">WEB-INF/user/blog/add.jsp</result>
+          <result name="list">WEB-INF/user/blog/list.jsp</result>
+          <result name="blog">WEB-INF/user/blog/blog.jsp</result>
+          <interceptor-ref name="myStack"/> <!-- 使用拦截器 -->
+      </action>
+       <action name="blogType" class="blogTypeAction">
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+      </action>
+        <action name="blogTag" class="blogTagAction">
+          <interceptor-ref name="myStack" /> <!-- 使用拦截器 -->
+          <result name="list">WEB-INF/user/blog/tag/list.jsp</result>
+      </action>
+</package>
+<!-- <include file="com/ss/cfg/struts-admin.xml" /> -->
+</struts>    
